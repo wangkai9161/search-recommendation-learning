@@ -37,6 +37,8 @@ def main():
     parser = argparse.ArgumentParser(); parser.add_argument('--data-dir', default='data/raw/ml-1m')
     parser.add_argument('--epochs', type=int, default=2); parser.add_argument('--max-users', type=int, default=1000)
     parser.add_argument('--batch-size', type=int, default=512); parser.add_argument('--num-interests', type=int, default=4)
+    parser.add_argument('--diversity-weight', type=float, default=0.01)
+    parser.add_argument('--temperature', type=float, default=0.2)
     args = parser.parse_args(); random.seed(42); torch.manual_seed(42)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'; data = load_sequences(args.data_dir, max_users=args.max_users)
     model = MultiInterestRecall(data.num_items, num_interests=args.num_interests).to(device)
@@ -48,8 +50,8 @@ def main():
         for histories, mask, targets in loader:
             histories, mask, targets = histories.to(device), mask.to(device), targets.to(device)
             optimizer.zero_grad()
-            # 主任务学习兴趣与正样本匹配，辅助 Loss 让多个兴趣保持差异。
-            loss = model.in_batch_loss(histories, targets, mask) + 0.05 * model.diversity_loss(histories, mask)
+            # 主任务让所有兴趣共同参与匹配，辅助 Loss 只负责避免兴趣完全重合。
+            loss = model.in_batch_loss(histories, targets, mask, args.temperature) + args.diversity_weight * model.diversity_loss(histories, mask)
             loss.backward(); optimizer.step(); total += loss.item() * len(targets)
         model.eval(); metrics = evaluate_retrieval(model, data.test, data.num_items, device=device)
         text = ' '.join(f'{k}={v:.4f}' for k, v in metrics.items())

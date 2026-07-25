@@ -10,17 +10,18 @@ class MultiInterestRecall(nn.Module):
         super().__init__()
         self.num_interests = num_interests
         self.item_embedding = nn.Embedding(num_items, embedding_dim)
-        self.interest_queries = nn.Parameter(torch.randn(num_interests, embedding_dim) * 0.02)
+        # Router 为每个历史行为计算其属于各个兴趣的权重，比全局查询更容易形成用户级兴趣分工。
+        self.router = nn.Linear(embedding_dim, num_interests, bias=False)
         self.projection = nn.Linear(embedding_dim, embedding_dim)
         nn.init.normal_(self.item_embedding.weight, std=0.02)
+        nn.init.orthogonal_(self.router.weight)
 
     def encode_interests(self, histories, mask=None):
         sequence = self.item_embedding(histories)
         if mask is not None:
             sequence = sequence.masked_fill(~mask.unsqueeze(-1), 0.0)
-        queries = self.interest_queries.unsqueeze(0).expand(sequence.size(0), -1, -1)
-        # 每个兴趣查询从用户行为序列中选择自己关注的行为子集。
-        attention = queries @ sequence.transpose(1, 2) / sequence.size(-1) ** 0.5
+        # 每个历史行为被路由到 K 个兴趣槽位，softmax 在行为序列维度归一化。
+        attention = self.router(sequence).transpose(1, 2)
         if mask is not None:
             attention = attention.masked_fill(~mask.unsqueeze(1), -torch.inf)
         weights = attention.softmax(dim=-1)
@@ -33,8 +34,9 @@ class MultiInterestRecall(nn.Module):
     def in_batch_loss(self, histories, positives, mask=None, temperature=0.07):
         interests = self.encode_interests(histories, mask)
         items = self.encode_item(positives)
-        # 一个用户的多个兴趣中，只要任一兴趣与候选匹配即可作为用户分数。
-        logits = (interests @ items.T).amax(dim=1) / temperature
+        # 使用 logsumexp 聚合多个兴趣，让每个兴趣都能获得训练梯度。
+        interest_scores = interests @ items.T
+        logits = torch.logsumexp(interest_scores / temperature, dim=1)
         labels = torch.arange(logits.size(0), device=logits.device)
         return F.cross_entropy(logits, labels)
 

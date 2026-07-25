@@ -18,5 +18,6 @@
 
 ## 其他模型
 
-FM、DeepFM、多兴趣和生成式实验结果分别见 [`../experiments/03_fm/README.md`](../experiments/03_fm/README.md)、[`../experiments/04_multi_interest/README.md`](../experiments/04_multi_interest/README.md) 和 [`../experiments/06_generative_recall/README.md`](../experiments/06_generative_recall/README.md)。
+公平对比中，改进后的多兴趣 Router 在 300 用户、2 Epoch 下达到 Recall@10 `0.0300`、Recall@50 `0.0967`、Coverage@50 `0.3546`；同条件 DSSM 为 `0.0067`、`0.0467`、`0.1349`。
 
+FM、DeepFM 和生成式实验结果分别见 [`../experiments/03_fm/README.md`](../experiments/03_fm/README.md) 和 [`../experiments/06_generative_recall/README.md`](../experiments/06_generative_recall/README.md)。
