@@ -7,18 +7,18 @@
 ## 运行
 
 ```powershell
-C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_generative.py --epochs 1 --max-users 300 --batch-size 256 --embedding-dim 64
+C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_generative.py --epochs 1 --max-users 100 --batch-size 128 --embedding-dim 32
 ```
 
 ## 结果
 
-配置：300 用户、43,145 个训练样本、3,706 个物品、1 Epoch、CPU。
+配置：100 用户、12,776 个训练样本、3,706 个物品、1 Epoch、CPU，32 维 Embedding。为控制 CPU 评估耗时，生成式模型单独使用教学规模，不与 300 用户判别式模型横向比较。
 
 | Loss | Recall@10 | Recall@50 | Coverage@50 | Unique Ratio | Tail Ratio |
 |---:|---:|---:|---:|---:|---:|
-| 7.8102 | 0.0167 | 0.1000 | 0.1751 | 0.0433 | 0.0000 |
+| 8.1677 | 0.0300 | 0.0700 | 0.1819 | 0.1348 | 0.0242 |
 
-后续需要增加生成候选去重、Coverage、长尾占比和与 DSSM 的统一评估；当前结果只验证了自回归训练链路。
+评估已改为按 batch 推理，并保留历史物品屏蔽、候选覆盖、唯一率和长尾比例；当前结果主要验证自回归训练与生成式候选质量统计链路。
 
 ## 补充指标
 

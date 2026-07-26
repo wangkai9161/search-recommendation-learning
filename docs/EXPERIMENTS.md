@@ -20,4 +20,4 @@
 
 公平对比中，改进后的多兴趣 Router 在 300 用户、2 Epoch 下达到 Recall@10 `0.0300`、Recall@50 `0.0967`、Coverage@50 `0.3546`；同条件 DSSM 为 `0.0067`、`0.0467`、`0.1349`。
 
-FM、DeepFM 和生成式实验结果分别见 [`../experiments/03_fm/README.md`](../experiments/03_fm/README.md) 和 [`../experiments/06_generative_recall/README.md`](../experiments/06_generative_recall/README.md)。
+在相同的 300 用户、2 Epoch 配置下，FM 为 Recall@10 `0.0200`、Recall@50 `0.0767`、NDCG@10 `0.0117`、Coverage@50 `0.6384`；DeepFM 为 `0.0200`、`0.1100`、`0.0067`、`0.5046`。生成式模型因 CPU Transformer 评估成本较高，采用 100 用户、32 维、1 Epoch 的教学配置，结果见 [`../experiments/06_generative_recall/README.md`](../experiments/06_generative_recall/README.md)。

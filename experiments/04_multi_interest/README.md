@@ -13,7 +13,7 @@ C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_mu
 公平对比配置：
 
 ```powershell
-C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_multi_interest.py --epochs 2 --max-users 1000 --batch-size 512 --num-interests 4 --diversity-weight 0.01
+C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_multi_interest.py --epochs 2 --max-users 300 --batch-size 512 --num-interests 4 --diversity-weight 0.01
 ```
 
 ## 改进前结果

@@ -7,16 +7,16 @@
 ## 运行
 
 ```powershell
-C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_fm.py --epochs 1 --max-users 300 --batch-size 512
+C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_fm.py --epochs 2 --max-users 300 --batch-size 512
 ```
 
 ## 结果
 
-配置：300 用户、43,145 个训练样本、3,706 个物品、1 Epoch、CPU。
+配置：300 用户、43,145 个训练样本、3,706 个物品、2 Epoch、CPU。
 
 | Recall@10 | Recall@50 | NDCG@10 | NDCG@50 | Item Coverage@50 |
 |---:|---:|---:|---:|---:|
-| 0.0100 | 0.0667 | 0.0075 | 0.0190 | 0.5880 |
+| 0.0200 | 0.0767 | 0.0117 | 0.0242 | 0.6384 |
 
 ## DeepFM 对照
 
@@ -25,11 +25,11 @@ DeepFM 教学实现位于 `src/models/deepfm.py`，复用 DSSM 的用户历史�
 运行：
 
 ```powershell
-C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_deepfm.py --epochs 1 --max-users 300
+C:\Users\wangx\miniconda3\Scripts\conda.exe run -n py310 python scripts/train_deepfm.py --epochs 2 --max-users 300
 ```
 
-配置：300 用户、43,145 个训练样本、3,706 个物品、1 Epoch、CPU。
+配置：300 用户、43,145 个训练样本、3,706 个物品、2 Epoch、CPU。
 
 | Recall@10 | Recall@50 | NDCG@10 | NDCG@50 | Item Coverage@50 |
 |---:|---:|---:|---:|---:|
-| 0.0200 | 0.1267 | 0.0080 | 0.0315 | 0.4900 |
+| 0.0200 | 0.1100 | 0.0067 | 0.0261 | 0.5046 |

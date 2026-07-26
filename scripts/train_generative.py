@@ -55,15 +55,25 @@ def main():
         cutoff = sorted(popularity.values())[max(0, len(popularity) // 2 - 1)]
         tail_items = {item for item, frequency in popularity.items() if frequency <= cutoff}
         tail_hits = 0
-        for history, target in data.test:
-            x = torch.tensor(history[-50:], device=device).unsqueeze(0); m = torch.ones_like(x, dtype=torch.bool)
-            scores = model(x, m).squeeze(0)
-            if history:
-                # 生成式召回评估同样排除历史已看物品。
-                scores[torch.tensor(history, device=device)] = -torch.inf
-            top = scores.topk(50).indices.tolist(); candidates.extend(top)
-            hits10 += int(target in top[:10]); hits50 += int(target in top)
-            tail_hits += sum(item in tail_items for item in top)
+        # 将测试历史批量推理，避免逐用户重复调用 Transformer。
+        for start in range(0, len(data.test), args.batch_size):
+            batch = data.test[start:start + args.batch_size]
+            histories = [history[-50:] for history, _ in batch]
+            lengths = torch.tensor([len(history) for history in histories], device=device)
+            padded = pad_sequence(
+                [torch.tensor(history, dtype=torch.long) for history in histories],
+                batch_first=True,
+            ).to(device)
+            mask = torch.arange(padded.size(1), device=device).unsqueeze(0) < lengths.unsqueeze(1)
+            score_batch = model(padded, mask)
+            for row, (history, target) in enumerate(batch):
+                scores = score_batch[row]
+                if history:
+                    # 生成式召回评估同样排除历史已看物品。
+                    scores[torch.tensor(history, device=device)] = -torch.inf
+                top = scores.topk(50).indices.tolist(); candidates.extend(top)
+                hits10 += int(target in top[:10]); hits50 += int(target in top)
+                tail_hits += sum(item in tail_items for item in top)
         unique_ratio = len(set(candidates)) / max(len(candidates), 1)
         tail_ratio = tail_hits / max(len(candidates), 1)
         print(f'epoch={epoch} loss={total / len(data.train):.4f} recall@10={hits10/count:.4f} recall@50={hits50/count:.4f} item_coverage@50={len(set(candidates))/data.num_items:.4f} candidate_unique_ratio={unique_ratio:.4f} tail_ratio={tail_ratio:.4f}')
