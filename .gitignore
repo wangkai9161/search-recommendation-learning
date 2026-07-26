@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 venv/
 data/raw/*
+!data/raw/README.md
 data/processed/*
 outputs/
 checkpoints/

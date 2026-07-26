@@ -2,6 +2,8 @@
 
 一个从双塔召回出发，逐步实现负采样、FM/DeepFM、多兴趣、离散化和生成式推荐的实践项目。项目重点研究：**负采样策略如何影响 Top-K 召回、候选覆盖和生成结果质量**。
 
+面试阅读建议：先看本文的结果与边界，再看 [`experiments/README.md`](experiments/README.md) 的实验索引，最后进入 [`src/`](src/README.md) 和对应脚本复现。
+
 ## 项目亮点
 
 - 从 DSSM 双塔基线开始，统一比较随机负采样和 Batch 内负采样。
@@ -77,7 +79,7 @@ experiments/   按阶段保存配置、结果和结论
 docs/          学习路线、项目结构和数据说明
 ```
 
-详细目录边界见 [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)，实验索引见 [`experiments/README.md`](experiments/README.md)。
+详细目录边界见 [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)，实验索引见 [`experiments/README.md`](experiments/README.md)，数据入口见 [`data/README.md`](data/README.md)。
 
 ## 数据与复现
 

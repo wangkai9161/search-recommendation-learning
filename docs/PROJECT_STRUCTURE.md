@@ -3,6 +3,7 @@
 ```text
 搜广推/
 ├─ data/
+│  ├─ README.md            数据目录入口
 │  ├─ raw/                 原始数据和数据来源说明
 │  └─ processed/           处理后的数据，不提交大文件
 ├─ src/
@@ -21,6 +22,8 @@
 
 ## 代码边界
 
+`notebooks/`、`tests/`、`src/losses/` 和 `src/utils/` 当前保留为后续扩展入口，核心实验代码不依赖这些空白模块。
+
 - 数据读取只放在 `src/data/`，训练脚本不直接解析原始文件格式。
 - 模型只放在 `src/models/`，评估逻辑统一调用 `src/evaluation/`。
 - `scripts/` 负责组装数据、模型、训练和输出，不承载可复用算法。
@@ -36,4 +39,3 @@
 | 04 | `scripts/train_multi_interest.py` | 多兴趣召回 |
 | 05 | `scripts/run_discrete.py` | K-Means / VQ 离散化 |
 | 06 | `scripts/train_generative.py` | Decoder-only 下一物品预测 |
-
