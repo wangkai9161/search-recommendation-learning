@@ -2,9 +2,7 @@
 
 一个从双塔召回出发，逐步实现负采样、FM/DeepFM、多兴趣、离散化和生成式推荐的实践项目。项目重点研究：**负采样策略如何影响 Top-K 召回、候选覆盖和生成结果质量**。
 
-面试阅读建议：先看本文的结果与边界，再看 [`experiments/README.md`](experiments/README.md) 的实验索引，最后进入 [`src/`](src/README.md) 和对应脚本复现。
-
-## 项目亮点
+## 项目介绍
 
 - 从 DSSM 双塔基线开始，统一比较随机负采样和 Batch 内负采样。
 - 使用 `Recall@10/50`、`NDCG@10/50`、`Item Coverage` 等召回指标，避免只看 AUC。
@@ -23,9 +21,9 @@ DSSM 双塔
   -> Decoder-only 生成式召回
 ```
 
-## 核心结果
+## 结果展示
 
-### 公平对比：300 用户、2 Epoch
+### 对比结果：300 用户、2 Epoch
 
 | 实验 | Recall@10 | Recall@50 | NDCG@10 | Item Coverage@50 |
 |---|---:|---:|---:|---:|
@@ -79,12 +77,6 @@ experiments/   按阶段保存配置、结果和结论
 docs/          学习路线、项目结构和数据说明
 ```
 
-详细目录边界见 [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)，实验索引见 [`experiments/README.md`](experiments/README.md)，数据入口见 [`data/README.md`](data/README.md)。
-
 ## 数据与复现
 
 项目使用 MovieLens 1M。原始数据不提交到仓库，下载和格式说明见 [`data/raw/README.md`](data/raw/README.md)。MIND 解析器已提供，但真实 MIND 数据训练尚未在本仓库中声称完成。
-
-## 项目边界
-
-这是一个面向学习和面试展示的可运行实验项目，不是工业推荐系统。当前仍待补充：完整 MIND 曝光日志实验、3 个随机种子统计、离散 Item Code 接入生成式模型，以及线上下发指标验证。
