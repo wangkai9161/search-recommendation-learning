@@ -77,7 +77,3 @@ scripts/       训练和实验入口
 experiments/   按阶段保存配置、结果和结论
 docs/          学习路线、项目结构和数据说明
 ```
-
-## 数据与复现
-
-项目使用 MovieLens 1M。原始数据不提交到仓库，下载和格式说明见 [`data/raw/README.md`](data/raw/README.md)。MIND 解析器已提供，但真实 MIND 数据训练尚未在本仓库中声称完成。
