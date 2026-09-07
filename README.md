@@ -1,12 +1,15 @@
 # 搜广推召回与生成式推荐实践
 
-面向 **搜索 / 广告 / 推荐算法实习面试** 的可复现实验项目。项目从 DSSM 双塔召回出发，逐步实现负采样对照、FM/DeepFM、多兴趣召回、离散表示、Decoder-only 生成式召回，并补充 Criteo Attribution CVR 基线，重点验证：
+实践项目：从双塔召回出发，逐步实现负采样、FM/DeepFM、多兴趣、离散化和生成式推荐。
+研究重点：负采样策略如何影响 Top-K 召回、候选覆盖和生成结果质量。
 
-- 负采样策略如何影响 Top-K 召回和候选覆盖。
-- 单兴趣用户向量为什么容易压缩用户兴趣，以及多兴趣 Router 如何缓解候选塌缩。
-- 一个召回项目如何向广告粗排 / CTR-CVR 预估链路迁移。
+## 项目介绍
 
-> 面试官阅读建议：先看本 README 的结果、复现和项目边界，再看 [`experiments/README.md`](experiments/README.md) 的实验索引，最后进入 [`src/`](src/README.md) 和 [`scripts/`](scripts/README.md) 查看实现。
+- 从 DSSM 双塔基线开始，统一比较随机负采样和 Batch 内负采样。
+- 使用 `Recall@10/50`、`NDCG@10/50`、`Item Coverage` 等召回指标，避免只看 AUC。
+- 实现 FM、DeepFM、多兴趣召回和 Decoder-only 下一物品预测教学版本。
+- 增加 MiniBatch K-Means / VQ 风格 Item Code 实验。
+- 所有实验使用 MovieLens 1M，训练入口可由 `py310` 环境直接运行。
 
 ## 简历与仓库对应关系
 
@@ -48,9 +51,9 @@ Criteo Attribution 日志
   -> LogLoss / AUC 评估
 ```
 
-## 核心结果
+## 结果展示
 
-### 公平对比：300 用户、2 Epoch
+### 对比结果：300 用户、2 Epoch
 
 | 实验 | Recall@10 | Recall@50 | NDCG@10 | Item Coverage@50 |
 | --- | ---: | ---: | ---: | ---: |
@@ -71,7 +74,7 @@ FM、DeepFM 使用 300 用户、2 Epoch；负采样主对照使用 1,000 用户�
 | DeepFM 风格召回 | 0.0200 | 0.1100 | 0.0067 | 0.5046 |
 | Decoder-only 生成式召回 | 0.0300 | 0.0700 | - | 0.1819 |
 
-观察：Batch 内负采样与随机负采样的 Recall@50 接近，但 Item Coverage@50 差异明显，说明采样方式不仅影响命中率，也影响候选分布和覆盖面。
+初步观察：Batch 内负采样与随机负采样的 Top-K 命中接近，但候选覆盖差异明显；Router 改进后，多兴趣模型的候选得到缓解。FM、DeepFM 已统一到 300 用户、2 Epoch；生成式模型因 Transformer 需求大评估成本较高，所以使用 100 用户、32 维、1 Epoch 的训练配置，不能与上表直接横向比较。
 
 ## 和搜索广告 CVR 的关系
 
