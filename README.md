@@ -45,7 +45,7 @@ MovieLens-1M 行为序列
   -> MiniBatch K-Means / VQ 风格离散表示
   -> Decoder-only 下一物品生成式召回
 
-Criteo Attribution 日志
+Criteo Attribution 日志（待上传）
   -> post-click CVR / impression-level CVR 样本
   -> Logistic Regression / DeepFM CVR 基线
   -> LogLoss / AUC 评估
@@ -83,7 +83,7 @@ FM、DeepFM 使用 300 用户、2 Epoch；负采样主对照使用 1,000 用户�
 - 候选召回和粗排前置建模：DSSM、多兴趣召回、Top-K 检索、候选覆盖分析。
 - 用户行为序列表征：从历史行为构造下一物品预测样本，可迁移到用户-查询-广告上下文。
 - 特征交互基础：FM/DeepFM 为 CTR/CVR 稀疏特征交叉做铺垫。
-- CVR 预估入口：Criteo Attribution 数据读取、点击后 CVR 样本过滤、LogLoss/AUC 二分类评估。
+- CVR 扩展入口：Criteo Attribution 代码目前待上传；已公开的完整 Criteo Sponsored Search CVR 实验见 [`search-ads-cvr`](https://github.com/wangkai9161/search-ads-cvr)。
 - 离线评估意识：区分 Recall/NDCG/覆盖率，避免只看单一指标。
 
 如果继续扩展为更完整的广告 CTR/CVR 项目，下一步会补充：
@@ -119,47 +119,36 @@ python scripts/train_dssm.py --epochs 2 --max-users 1000 --negative-mode random 
 python scripts/train_multi_interest.py --epochs 2 --max-users 300 --num-interests 4
 ```
 
-运行 Criteo Attribution CVR toy smoke test：
-
-```bash
-python scripts/make_criteo_attribution_toy.py --rows 5000
-python scripts/train_cvr_attribution.py --data-path data/raw/criteo-attribution --max-rows 5000 --epochs 1 --model deepfm
-```
+> Criteo Attribution CVR toy 基线目前标记为“待上传”，因此暂不提供公开仓库内的运行命令。
 
 ## 仓库结构
 
 ```text
-data/          原始与处理后数据
+data/          MovieLens 数据说明与原始数据占位
 configs/       实验配置说明
 docs/          项目结构、学习路线和边界说明
 experiments/   分阶段实验记录和结果
-model/         模型注册与入口
 notebooks/     探索性笔记
-output/        训练后模型文件和可视化产物
-prepare/       数据读取、清洗、归一化
-result/        指标、训练历史和可视化数据
-scripts/       训练与实验入口
-train/         训练入口与模型选择
-src/data/      MovieLens、MIND、Criteo Attribution 数据读取
-src/evaluation/Recall、NDCG、Item Coverage、LogLoss、AUC
-src/models/    DSSM、FM、DeepFM、多兴趣、生成式、离散化、CVR 模型
+scripts/       MovieLens 训练与实验入口
+src/data/      MovieLens、MIND 数据读取
+src/evaluation/Recall、NDCG、Item Coverage
+src/models/    DSSM、FM、DeepFM、多兴趣、生成式、离散化模型
 tests/         基础测试
 ```
 
-## 新的相对路径骨架
+## 待上传扩展
 
-如果你想把项目按“读数 -> 预处理 -> 训练 -> 输出”组织，新的默认链路是：
+以下是本地扩展代码预期采用的相对路径结构，目前尚未包含在公开仓库中：
 
 ```text
-data/      原始数据和处理后数据
-prepare/   读取、归一化、特征处理
-model/     模型注册
-train/     训练入口
-output/    模型文件和可视化产物
-result/    训练结果、指标和可视化数据
+model/       模型注册与入口
+prepare/     数据读取、清洗、归一化
+train/       训练入口与模型选择
+output/      模型文件和可视化产物
+result/      训练结果、指标和可视化数据
 ```
 
-所有脚本都通过 `project_paths.py` 统一定位根目录，尽量避免写死绝对路径。
+其中 Criteo Attribution toy 基线、上述扩展目录以及对应脚本均标记为“待上传”。
 
 ## 已完成与边界
 
